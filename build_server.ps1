@@ -19,7 +19,7 @@ Param(
 )
 
 $ErrorActionPreference = "Stop"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Server.git"
+$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT/Server.git"
 $SERVER_DIR = "./Server"
 
 $BuildOnCommit = $Commit.Length -gt 0
@@ -91,7 +91,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Get-ChildItem ./build
-$AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
+$AkiMeta = (Get-Content ./build/SPT_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 
 if ($BuildOnCommit) {
@@ -101,14 +101,16 @@ else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$Suffix = "$Target-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
+$Suffix = "$Target-v$($akimeta.sptVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
 
-if ($SIT) {
-    $ZipName = "Aki-Server-sit-$Suffix"
+if ($IsWindows) {
+    $Os = "win"
 }
 else{
-    $ZipName = "Aki-Server-$Suffix"
+    $Os = "linux"
 }
+
+$ZipName = "Aki-Server-$Os-$Suffix"
 
 if (!$NoZip) {
     if ($IsWindows) {
