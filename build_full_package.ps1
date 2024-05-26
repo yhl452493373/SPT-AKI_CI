@@ -61,7 +61,7 @@ if (Test-Path -Path $OutputFolder) {
 if ($NeedBuild) {
     # build server
     Write-Output "Building Aki Server"
-    pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip
+    pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release
     Get-ChildItem "$ServerBuild"
 
     # build modules
@@ -76,10 +76,10 @@ if ($NeedBuild) {
     Get-ChildItem "$LauncherBuild"
 }
 
-$AkiMeta = (Get-Content "$ServerBuild/Aki_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
+$AkiMeta = (Get-Content "$ServerBuild/SPT_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 $AkiCompatVersion = $akimeta.compatibleTarkovVersion
-$AkiVersion = $akimeta.akiVersion
+$AkiVersion = $akimeta.sptVersion
 
 # Add extra files
 Write-Output "Adding extra files"
