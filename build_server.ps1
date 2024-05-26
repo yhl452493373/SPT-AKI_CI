@@ -110,7 +110,12 @@ else{
     $Os = "linux"
 }
 
-$ZipName = "Aki-Server-$Os-$Suffix"
+if ($SIT) {
+    $ZipName = "Aki-Server-sit-$Os-$Suffix"
+}
+else{
+    $ZipName = "Aki-Server-$Os-$Suffix"
+}
 
 if (!$NoZip) {
     if ($IsWindows) {
