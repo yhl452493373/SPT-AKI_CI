@@ -4,7 +4,7 @@ Param(
 )
 
 # 去除客户端Mod限制
-$FILE_PATH = "$SourceDir/project/Aki.Custom/Utils/MenuNotificationManager.cs"
+$FILE_PATH = "$SourceDir/project/SPT.Custom/Utils/MenuNotificationManager.cs"
 $SEARCH_STRING = "new PreventClientModsPatch().Enable();"
 $REPLACE_STRING = "//new PreventClientModsPatch().Enable();"
 # 读取文件内容
@@ -17,7 +17,7 @@ $NEW_CONTENT = $FILE_CONTENT.replace($SEARCH_STRING, $REPLACE_STRING)
 Write-Output "Comment new PreventClientModsPatch().Enable();"
 
 # 去除客户端调试水印
-#$FILE_PATH = "$SourceDir/project/Aki.Custom/Utils/MenuNotificationManager.cs"
+#$FILE_PATH = "$SourceDir/project/SPT.Custom/Utils/MenuNotificationManager.cs"
 $SEARCH_STRING = "new BetaLogoPatch().Enable();"
 $REPLACE_STRING = "//new BetaLogoPatch().Enable();"
 # 读取文件内容
@@ -30,7 +30,7 @@ $NEW_CONTENT = $NEW_CONTENT.replace($SEARCH_STRING, $REPLACE_STRING)
 Write-Output "Comment new DebugLogoPatch().Enable();"
 
 # 去除客户端调试水印2
-#$FILE_PATH = "$SourceDir/project/Aki.Custom/Utils/MenuNotificationManager.cs"
+#$FILE_PATH = "$SourceDir/project/SPT.Custom/Utils/MenuNotificationManager.cs"
 $SEARCH_STRING = "new BetaLogoPatch2().Enable();"
 $REPLACE_STRING = "//new BetaLogoPatch2().Enable();"
 # 读取文件内容
@@ -43,7 +43,7 @@ $NEW_CONTENT = $NEW_CONTENT.replace($SEARCH_STRING, $REPLACE_STRING)
 Write-Output "Comment new DebugLogoPatch2().Enable();"
 
 # 去除客户端调试水印3
-#$FILE_PATH = "$SourceDir/project/Aki.Custom/Utils/MenuNotificationManager.cs"
+#$FILE_PATH = "$SourceDir/project/SPT.Custom/Utils/MenuNotificationManager.cs"
 $SEARCH_STRING = "new BetaLogoPatch3().Enable();"
 $REPLACE_STRING = "//new BetaLogoPatch3().Enable();"
 # 读取文件内容
