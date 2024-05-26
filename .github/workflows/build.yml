@@ -11,51 +11,61 @@ on:
   #     - '**.yml'
   #schedule:
   #  - cron: '0 4 * * *'
-
+  
 jobs:
   job1:
     name: Build Aki Server SIT
     strategy:
       fail-fast: false
       matrix:
-        versions:
+        version: 
           [
             {
-              sbranch: "master", 
+              branch: "master", 
               node: 20
-              }
+            }
           ]
+        os: 
+          [
+            {
+              os: "windows-latest",
+              flags: "-NoZip",
+              zip: false
+            }
+          ]
+        dbg: ["-Release"]
     
-    runs-on: windows-latest
+    runs-on: ${{matrix.os.os}}
     
     steps:
       - uses: actions/checkout@v4
-
-      # - name: Download Aki Server package-lock.json
-      #   shell: pwsh
-      #   run: Invoke-WebRequest -Uri "https://dev.sp-tarkov.com/SPT-AKI/Server/raw/branch/${{ matrix.versions.sbranch }}/project/package-lock.json" -OutFile "./package-lock.json"
-      
+ 
       - uses: actions/setup-node@v4
         with:
-          node-version:  ${{ matrix.versions.node }}
-          # cache: 'npm'
-      
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8
+          node-version: ${{matrix.version.node}}
 
       - name: Build Aki Server
         id: build
         shell: pwsh
-        run: ./build_server.ps1 -SIT -Release -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }}
+        run: ./build_server.ps1 -SIT -Overwrite -Branch ${{matrix.version.branch}} ${{matrix.dbg}} ${{matrix.os.flags}}
 
       - uses: actions/upload-artifact@v4
+        if: ${{! matrix.os.zip}}
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
           path: './Server/project/build/*'
           if-no-files-found: error
           retention-days: 3
-          compression-level: 9
+          compression-level: 9      
+
+      - uses: actions/upload-artifact@v4
+        if: ${{matrix.os.zip}}
+        with:
+          name: ${{ steps.build.outputs.ZIP_NAME }}
+          path: './Server/${{ steps.build.outputs.ZIP_NAME }}'
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
 
   job2:
     name: Build Windows Aki Packages
@@ -64,6 +74,14 @@ jobs:
       matrix:
         versions:
           [
+            # {
+            #   sbranch: "3.8.2-DEV",
+            #   lbranch: "3.8.2-DEV",
+            #   mbranch: "3.8.2-DEV",
+            #   version: "0.14.1.2.29197",
+            #   dll_url: "https://github.com/yhl452493373/SPT-AKI_DLL/raw/main/",
+            #   node: 20
+            # },
             {
               sbranch: "master",
               lbranch: "master",
@@ -79,14 +97,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Download Aki Server package-lock.json
-      #   shell: pwsh
-      #   run: Invoke-WebRequest -Uri "https://dev.sp-tarkov.com/SPT-AKI/Server/raw/branch/${{ matrix.versions.sbranch }}/project/package-lock.json" -OutFile "./package-lock.json"
-      
       - uses: actions/setup-node@v4
         with:
           node-version:  ${{ matrix.versions.node }}
-          # cache: 'npm'
       
       - uses: actions/setup-dotnet@v4
         with:
@@ -102,15 +115,18 @@ jobs:
         shell: pwsh
         run: ./build_modules.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.mbranch }} -Url ${{ matrix.versions.dll_url }} -TarkovVersion ${{ matrix.versions.version }}
 
-      - name: Build Aki Launcher
-        id: build_launcher
-        shell: pwsh
-        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
+      - name: Build Aki Launcher with Retry
+        uses: nick-fields/retry@v3
+        with:
+          timeout_seconds: 150
+          max_attempts: 3
+          shell: pwsh
+          command: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
 
       - name: Make Final Package
-        id: build_packege
+        id: build_package
         shell: pwsh
-        run: .\build_full_package.ps1 -Overwrite -PkgOnly
+        run: .\build_full_package.ps1 -Overwrite -PkgOnly -NoZip
 
       - uses: actions/upload-artifact@v4
         with:
@@ -122,15 +138,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build_server.outputs.ZIP_NAME }}
-          path: './Server/project/build/*'
-          if-no-files-found: error
-          retention-days: 3
-          compression-level: 9
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build_packege.outputs.ZIP_NAME }}
+          name: ${{ steps.build_package.outputs.ZIP_NAME }}
           path: "./output/*"
           if-no-files-found: error
           retention-days: 3
