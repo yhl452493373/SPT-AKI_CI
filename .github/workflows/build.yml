@@ -21,7 +21,7 @@ jobs:
         version: 
           [
             {
-              branch: "master", 
+              branch: "30473", 
               node: 20
             }
           ]
@@ -83,10 +83,10 @@ jobs:
             #   node: 20
             # },
             {
-              sbranch: "master",
-              lbranch: "master",
-              mbranch: "master",
-              version: "0.14.8.6.30268",
+              sbranch: "30473",
+              lbranch: "30473",
+              mbranch: "30473",
+              version: "0.14.9.0.30473",
               dll_url: "https://github.com/yhl452493373/SPT-AKI_DLL/raw/main/",
               node: 20
             }
