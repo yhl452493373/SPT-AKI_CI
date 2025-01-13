@@ -42,7 +42,7 @@ jobs:
               zip: true
             }
           ]
-        dbg: ["", "-Release"]
+        dbg: ["-Release","-Release"]
     
     runs-on: ${{matrix.os.os}}
     
