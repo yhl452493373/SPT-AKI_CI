@@ -1,15 +1,15 @@
 name: Build SPT Projects
 
 on:
-  push:
-    branches:
-      - 'master'
-    paths:
-      - '**.ps1'
-      - '**.yml'
-  pull_request:
-  schedule:
-    - cron: '0 0 * * *'
+  # push:
+    # branches:
+      # - 'master'
+    # paths:
+      # - '**.ps1'
+      # - '**.yml'
+  # pull_request:
+  # schedule:
+    # - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -20,14 +20,15 @@ jobs:
       matrix:
         m: 
           [
-            # {
-            #   branch: "3.10.5-DEV", 
-            #   node: 20
-            # },
             {
-              branch: "4.0.0-DEV",
-              node: 22
+              branch: "3.10.5-DEV", 
+              node: 20
             }
+            # ,
+            # {
+              # branch: "4.0.0-DEV",
+              # node: 22
+            # }
           ]
         os: 
           [
@@ -83,20 +84,21 @@ jobs:
       matrix:
         versions:
           [
-            # {
-            #   sbranch: "3.10.5-DEV",
-            #   lbranch: "3.10.5-DEV",
-            #   mbranch: "3.10.5-DEV",
-            #   version: "0.15.5.1.33420",
-            #   node: 20
-            # },
             {
-              sbranch: "4.0.0-DEV",
-              lbranch: "4.0.0-DEV",
-              mbranch: "4.0.0-DEV",
-              version: "0.16.0.2.34510",
-              node: 22
+              sbranch: "3.10.5-DEV",
+              lbranch: "3.10.5-DEV",
+              mbranch: "3.10.5-DEV",
+              version: "0.15.5.33420",
+              node: 20
             }
+            # ,
+            # {
+              # sbranch: "4.0.0-DEV",
+              # lbranch: "4.0.0-DEV",
+              # mbranch: "4.0.0-DEV",
+              # version: "0.16.0.2.34510",
+              # node: 22
+            # }
           ]
 
     runs-on: windows-latest
