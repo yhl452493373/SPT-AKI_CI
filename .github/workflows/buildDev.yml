@@ -1,4 +1,4 @@
-name: Build SPT Projects(Dev)
+name: Build SPT Projects (Dev)
 
 on:
   workflow_dispatch:
